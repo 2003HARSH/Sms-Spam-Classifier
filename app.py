@@ -14,7 +14,11 @@ ps = PorterStemmer()
 
 def transform_text(text):
     text = text.lower()
-    text = text.split(' ')
+    t=''
+    for i in text:
+        if i not in string.punctuation:
+            t=t+i
+    text = t.split(' ')
 
     y = []
     for i in text:
@@ -25,7 +29,7 @@ def transform_text(text):
     y.clear()
 
     for i in text:
-        if i not in stopwords and i not in string.punctuation:
+        if i not in stopwords:
             y.append(i)
 
     text = y[:]
@@ -38,13 +42,9 @@ def transform_text(text):
     return " ".join(y)
 
 if st.button("Predict"):
-    # 1.preprocess
     transform_sms=transform_text(input_sms)
-    #2.vectorise
     vector_input=tfidf.transform([transform_sms])
-    #3.predict
-    result=model.predict(vector_input)[0]
-    #4.display
+    result=model.predict(vector_input)[0]    
     if result==1:
         st.header("Spam")
     else:
